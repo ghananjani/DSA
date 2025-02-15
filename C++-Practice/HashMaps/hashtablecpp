@@ -1,0 +1,32 @@
+#include <vector>
+#include <list>
+
+class MyHashMap {
+private:
+    static const int SIZE = 10007;  
+    std::vector<std::list<std::pair<int, int>>> table;
+
+    int hash(int key) { return key % SIZE; }  
+
+public:
+    MyHashMap() : table(SIZE) {}
+
+    void put(int key, int value) {
+        int idx = hash(key);
+        for (auto& [k, v] : table[idx])
+            if (k == key) { v = value; return; }
+        table[idx].emplace_back(key, value);
+    }
+
+    int get(int key) {
+        int idx = hash(key);
+        for (auto& [k, v] : table[idx])
+            if (k == key) return v;
+        return -1;
+    }
+
+    void remove(int key) {
+        int idx = hash(key);
+        table[idx].remove_if([key](auto& p) { return p.first == key; });
+    }
+};
